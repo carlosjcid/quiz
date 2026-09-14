@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qual é a causa do seu cansaço? · Dr. Kleiner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #08090F;
+  --surf:     #0F1120;
+  --surf2:    #161928;
+  --surf3:    #1E2438;
+  --border:   #222B44;
+  --border2:  #2C3855;
+  --accent:   #3DDDC9;
+  --accent-d: #0A8F82;
+  --text:     #EDF0FF;
+  --text2:    #8A94B4;
+  --text3:    #4D5673;
+  --col-A:    #C27EEA;
+  --col-B:    #F5A623;
+  --col-C:    #FF6B6B;
+  --col-D:    #3DDDC9;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--surf3);
+  z-index: 100;
+  transition: opacity .3s;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─── SCREENS ─── */
+.screen {
+  display: none;
+  width: 100%;
+  max-width: 560px;
+  padding: 20px 20px 60px;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  animation: fadeUp .4s ease both;
+}
+.screen.active { display: flex; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── INTRO SCREEN ─── */
+.intro-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 56px;
+  width: 100%;
+}
+
+.doctor-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 6px 14px 6px 8px;
+  margin-bottom: 36px;
+}
+.doctor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-d) 0%, #0F3A36 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.doctor-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: .02em;
+}
+
+.intro-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.intro-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(32px, 7vw, 48px);
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 20px;
+  text-wrap: balance;
+}
+.intro-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.intro-sub {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 420px;
+  margin-bottom: 36px;
+}
+
+.intro-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.pill {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+}
+
+.intro-stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 44px;
+}
+.intro-stat-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+.intro-stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+/* ─── NAME FORM ─── */
+.name-form {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.name-input {
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  width: 100%;
+}
+.name-input::placeholder { color: var(--text3); }
+.name-input:focus { border-color: var(--accent); }
+
+/* ─── BUTTONS ─── */
+.btn-primary {
+  background: var(--accent);
+  color: #040506;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 28px;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity .15s, transform .1s;
+  letter-spacing: .01em;
+}
+.btn-primary:hover  { opacity: .9; }
+.btn-primary:active { transform: scale(.98); }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color: var(--text3); color: var(--text); }
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* ─── QUESTION SCREEN ─── */
+.q-screen {
+  padding-top: 60px;
+  width: 100%;
+}
+
+.q-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .04em;
+}
+.q-counter { color: var(--accent); }
+
+.q-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.q-text {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(22px, 5vw, 30px);
+  line-height: 1.25;
+  color: var(--text);
+  margin-bottom: 32px;
+  text-wrap: balance;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.option {
+  background: var(--surf);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, transform .1s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.option:hover {
+  border-color: var(--border2);
+  background: var(--surf2);
+}
+.option:active { transform: scale(.99); }
+.option.selected {
+  border-color: var(--accent);
+  background: #3DDDC910;
+}
+
+.option-letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--surf3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: background .2s, color .2s;
+}
+.option.selected .option-letter {
+  background: var(--accent);
+  color: #040506;
+}
+
+.option-text {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.45;
+  transition: color .2s;
+}
+.option.selected .option-text { color: var(--text); }
+
+.q-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  gap: 12px;
+}
+
+/* ─── EMAIL SCREEN ─── */
+.email-screen {
+  padding-top: 56px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.email-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: #3DDDC910;
+  border: 1px solid #3DDDC930;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 28px;
+}
+.email-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 26px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.email-sub {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.6;
+  max-width: 340px;
+  margin-bottom: 32px;
+}
+.email-form {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ─── RESULT SCREEN ─── */
+.result-screen {
+  padding-top: 48px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 40px;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  border: 1px solid;
+}
+
+.result-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 24px;
+  border: 1px solid;
+}
+
+.result-heading {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.result-title {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(26px, 5vw, 36px);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  text-wrap: balance;
+}
+
+.result-subtitle {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 420px;
+  margin-bottom: 32px;
+}
+
+.result-signals {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+.result-signals-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.signal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.45;
+}
+.signal-item:last-child { border-bottom: none; }
+.signal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.result-disclaimer {
+  font-size: 11px;
+  color: var(--text3);
+  line-height: 1.5;
+  max-width: 380px;
+  margin-bottom: 28px;
+  padding: 12px 16px;
+  background: var(--surf2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.cta-section {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cta-primary {
+  background: var(--accent);
+  color: #040506;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  border: none;
+  border-radius: 14px;
+  padding: 18px 28px;
+  cursor: pointer;
+  transition: opacity .15s, transform .1s;
+  letter-spacing: .01em;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+.cta-primary:hover  { opacity: .9; }
+.cta-primary:active { transform: scale(.98); }
+
+.cta-secondary {
+  font-size: 13px;
+  color: var(--text3);
+  text-align: center;
+  padding: 10px;
+}
+
+.result-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+.result-footer-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-d), #0A1F1E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.result-footer-text { font-size: 12px; color: var(--text3); text-align: left; line-height: 1.45; }
+.result-footer-text strong { color: var(--text2); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 400px) {
+  .intro-stats { gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<!-- ═══ INTRO SCREEN ═══ -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-wrap">
+    <div class="doctor-badge">
+      <div class="doctor-avatar"></div>
+      <div class="doctor-name">Dr. Kleiner Pinheiro · Goiânia</div>
+    </div>
+
+    <div class="intro-eyebrow">Quiz de Investigação</div>
+
+    <h1 class="intro-title">
+      Qual é a causa<br>do seu <em>cansaço</em>?
+    </h1>
+
+    <p class="intro-sub">
+      Exames "normais" não significam que está tudo bem.
+      Responda 8 perguntas e descubra o perfil de investigação que pode explicar o que você está sentindo.
+    </p>
+
+    <div class="intro-pills">
+      <span class="pill">⏱ 2 minutos</span>
+      <span class="pill">8 perguntas</span>
+      <span class="pill">100% gratuito</span>
+    </div>
+
+    <div class="intro-stats">
+      <div>
+        <div class="intro-stat-num">20 anos</div>
+        <div class="intro-stat-label">de clínica</div>
+      </div>
+      <div>
+        <div class="intro-stat-num">IFM/EUA</div>
+        <div class="intro-stat-label">certificação 2018</div>
+      </div>
+      <div>
+        <div class="intro-stat-num">4 perfis</div>
+        <div class="intro-stat-label">de investigação</div>
+      </div>
+    </div>
+
+    <div class="name-form">
+      <input
+        class="name-input"
+        type="text"
+        id="nameInput"
+        placeholder="Como posso te chamar?"
+        autocomplete="given-name"
+        maxlength="40"
+      >
+      <button class="btn-primary" onclick="startQuiz()">Começar investigação →</button>
+      <p class="disclaimer">Suas respostas não substituem uma avaliação médica.<br>Este quiz é apenas um ponto de partida para investigação.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUESTION SCREENS (1–8) ═══ -->
+<div class="screen" id="screen-quiz">
+  <div class="q-screen">
+    <div class="q-meta">
+      <span class="q-counter" id="qCounter">Pergunta 1 de 8</span>
+      <button class="btn-ghost" onclick="prevQuestion()" id="btnBack" style="display:none">← Voltar</button>
+    </div>
+    <div class="q-label" id="qLabel">Sintoma principal</div>
+    <h2 class="q-text" id="qText"></h2>
+    <div class="options" id="optionsContainer"></div>
+    <div class="q-nav">
+      <div></div>
+      <button class="btn-primary" onclick="nextQuestion()" id="btnNext" style="max-width:200px" disabled>Próxima →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EMAIL SCREEN ═══ -->
+<div class="screen" id="screen-email">
+  <div class="email-screen">
+    <div class="email-icon"></div>
+    <h2 class="email-title">Quase lá,<br><span id="emailName">você</span>.</h2>
+    <p class="email-sub">
+      Seu resultado está pronto. Onde posso enviar um resumo personalizado da sua investigação?
+    </p>
+    <div class="email-form">
+      <input class="name-input" type="email" id="emailInput" placeholder="Seu melhor e-mail" autocomplete="email">
+      <button class="btn-primary" onclick="showResult()">Ver meu resultado →</button>
+      <button class="btn-ghost" onclick="showResult()" style="margin-top:4px">Pular, ver resultado agora</button>
+      <p class="disclaimer">Sem spam. Você pode cancelar a qualquer momento.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESULT SCREEN ═══ -->
+<div class="screen" id="screen-result">
+  <div class="result-screen">
+    <div class="result-badge" id="rBadge"></div>
+    <div class="result-icon" id="rIcon"></div>
+    <div class="result-heading" id="rHeading"></div>
+    <h2 class="result-title" id="rTitle"></h2>
+    <p class="result-subtitle" id="rSubtitle"></p>
+
+    <div class="result-signals" id="rSignals">
+      <div class="result-signals-title">Sinais que investigamos nesse perfil</div>
+      <div id="rSignalsList"></div>
+    </div>
+
+    <div class="result-disclaimer">
+      ⚕️ Este resultado não é um diagnóstico médico. É um ponto de partida, um mapa dos sinais que merecem investigação clínica aprofundada.
+    </div>
+
+    <div class="cta-section">
+      <a href="https://bio.drkleinerpinheiro.com" target="_blank" class="cta-primary" id="rCta">
+        Quero investigar a causa do meu cansaço
+      </a>
+      <div class="cta-secondary">Consulta presencial em Goiânia.</div>
+    </div>
+
+    <div class="result-footer">
+      <div class="result-footer-avatar"></div>
+      <div class="result-footer-text">
+        <strong>Dr. Kleiner Pinheiro</strong><br>
+        20 anos de clínica · CRM 15378/GO · IFM/EUA 2018
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── QUIZ DATA ───────────────────────────────────────────────────────────────
+
+const questions = [
+  {
+    label: "Sintoma principal",
+    text: "Como você descreveria melhor o seu cansaço?",
+    options: [
+      { text: "Acordo descansada(o) mas perco energia ao longo do dia", profile: "B" },
+      { text: "Acordo exausta(o) mesmo dormindo horas suficientes", profile: "A" },
+      { text: "Sinto um esgotamento que vai além do físico, parece vazio", profile: "C" },
+      { text: "Meu cansaço vem em ondas, sem padrão claro", profile: "D" }
+    ]
+  },
+  {
+    label: "Qualidade do sono",
+    text: "Como está o seu sono?",
+    options: [
+      { text: "Durmo bem, mas acordo sem energia de qualquer forma", profile: "A" },
+      { text: "Tenho dificuldade para adormecer ou a mente não desacelera", profile: "C" },
+      { text: "Acordo no meio da madrugada e tenho dificuldade de voltar a dormir", profile: "C" },
+      { text: "Durmo muito, mais do que antes, mas ainda sinto cansaço", profile: "A" }
+    ]
+  },
+  {
+    label: "Sintomas físicos",
+    text: "Qual desses sintomas você também reconhece?",
+    options: [
+      { text: "Ganho de peso sem mudança de dieta ou queda de cabelo", profile: "A" },
+      { text: "Mãos e pés sempre frios, intolerância ao frio ou ao calor", profile: "A" },
+      { text: "Digestão lenta, inchaço ou sensibilidade a vários alimentos", profile: "B" },
+      { text: "Dores musculares, articulares ou sensação de corpo pesado", profile: "D" }
+    ]
+  },
+  {
+    label: "Padrão de energia",
+    text: "Quando o cansaço te afeta mais?",
+    options: [
+      { text: "Logo pela manhã, difícil começar o dia", profile: "A" },
+      { text: "No final da tarde, especialmente entre 15h e 17h", profile: "C" },
+      { text: "Após atividade física, demoro muito para recuperar", profile: "B" },
+      { text: "Constante, sem variação, o dia inteiro", profile: "D" }
+    ]
+  },
+  {
+    label: "Histórico de exames",
+    text: "Você já fez exames e o resultado foi 'tudo normal'?",
+    options: [
+      { text: "Sim e isso me frustra porque claramente algo está errado", profile: "D" },
+      { text: "Fiz e encontraram algo, mas o tratamento não resolveu", profile: "D" },
+      { text: "Não fiz exames recentemente, faz mais de um ano", profile: "B" },
+      { text: "Faço exames regularmente e acompanho com médico", profile: "A" }
+    ]
+  },
+  {
+    label: "Fatores de estilo de vida",
+    text: "O que você relaciona ao início ou à piora do cansaço?",
+    options: [
+      { text: "Estresse prolongado, trabalho, família, pressão constante", profile: "C" },
+      { text: "Mudança hormonal, gestação, menopausa, andropausa", profile: "A" },
+      { text: "Dieta restritiva ou alimentação irregular por muito tempo", profile: "B" },
+      { text: "Surgiu sem causa aparente, do nada e foi piorando", profile: "D" }
+    ]
+  },
+  {
+    label: "Impacto na vida",
+    text: "O que o cansaço está tirando de você?",
+    options: [
+      { text: "Minha produtividade no trabalho e meu foco", profile: "D" },
+      { text: "A disposição para estar presente com quem amo", profile: "C" },
+      { text: "Minha performance física, deixei de me exercitar", profile: "B" },
+      { text: "O prazer nas coisas que antes me davam energia", profile: "A" }
+    ]
+  },
+  {
+    label: "Duração",
+    text: "Há quanto tempo você vive com esse cansaço?",
+    options: [
+      { text: "Menos de 6 meses, é uma queda recente", profile: "C" },
+      { text: "Entre 6 meses e 2 anos", profile: "B" },
+      { text: "Mais de 2 anos, já virou 'normal' para mim", profile: "A" },
+      { text: "Desde que me lembro, sempre fui assim", profile: "D" }
+    ]
+  }
+];
+
+// ─── PROFILES ────────────────────────────────────────────────────────────────
+
+const profiles = {
+  A: {
+    color: "var(--col-A)",
+    colorHex: "#C27EEA",
+    icon: "🔮",
+    badge: "Perfil Hormonal",
+    heading: "Seu padrão de investigação",
+    title: "Fadiga de origem\nhormonal ou tireoidiana",
+    subtitle: "Esse é um dos padrões mais comuns que investigamos, e um dos mais subdiagnosticados. Os exames de rotina raramente vão fundo o suficiente nos marcadores hormonais. Quando a investigação é feita corretamente, encontramos desequilíbrios que explicam tudo o que você está sentindo.",
+    signals: [
+      "Tireoide funcionando 'dentro do normal' nos exames convencionais, mas com sintomas clássicos de baixo funcionamento",
+      "Testosterona, estrogênio ou progesterona em níveis que pedem investigação mais detalhada",
+      "Cortisol com padrão alterado, não necessariamente fora do range, mas fora do ritmo ideal",
+      "Vitamina D, ferritina e B12 em níveis que comprometem a energia mesmo sendo 'normais'"
+    ]
+  },
+  B: {
+    color: "var(--col-B)",
+    colorHex: "#F5A623",
+    icon: "⚡",
+    badge: "Perfil Metabólico",
+    heading: "Seu padrão de investigação",
+    title: "Fadiga de origem\nmetabólica e nutricional",
+    subtitle: "Seu organismo pode estar produzindo energia de forma ineficiente no nível celular. Isso não aparece em exames de rotina, exige uma investigação mais refinada da mitocôndria, do metabolismo da glicose e dos micronutrientes essenciais para a produção de energia.",
+    signals: [
+      "Resistência à insulina subclínica, glicemia 'normal' mas com picos que drenam energia",
+      "Deficiências nutricionais que comprometem a cadeia de produção de ATP nas células",
+      "Permeabilidade intestinal aumentada que impede a absorção de nutrientes essenciais",
+      "Inflamação de baixo grau que desvia energia do funcionamento normal do corpo"
+    ]
+  },
+  C: {
+    color: "var(--col-C)",
+    colorHex: "#FF6B6B",
+    icon: "🌊",
+    badge: "Perfil Adrenal",
+    heading: "Seu padrão de investigação",
+    title: "Fadiga do eixo\nestresse-adrenal",
+    subtitle: "Seu corpo pode estar num estado de esgotamento do eixo HPA (hipotálamo-hipófise-adrenal), o sistema que regula como você responde ao estresse. Esse padrão se desenvolve silenciosamente depois de períodos prolongados de pressão e raramente é investigado de forma adequada.",
+    signals: [
+      "Cortisol com curva diurna alterada, alto à noite, baixo pela manhã, invertendo o ritmo natural",
+      "Sensibilidade aumentada a estímulos: barulho, luz, situações que antes não incomodavam",
+      "Ciclo de estresse-recuperação comprometido, o corpo demora muito para 'descansar de verdade'",
+      "Neurotransmissores como dopamina e serotonina em desequilíbrio, afetando motivação e humor"
+    ]
+  },
+  D: {
+    color: "var(--col-D)",
+    colorHex: "#3DDDC9",
+    icon: "🔍",
+    badge: "Perfil Complexo",
+    heading: "Seu padrão de investigação",
+    title: "Investigação\nmultifatorial necessária",
+    subtitle: "Seus sintomas não se encaixam em um padrão único, o que, na minha experiência, é o perfil que mais exige uma investigação cuidadosa. Frequentemente, quando vários sistemas estão envolvidos, o motivo é que ninguém investigou a causa raiz. Um exame de rotina não vai chegar lá.",
+    signals: [
+      "Múltiplos sistemas comprometidos, hormonal, metabólico, neurológico, interagindo entre si",
+      "Histórico de exames 'normais' que não explicam os sintomas do paciente",
+      "Padrão que pode envolver disfunção mitocondrial, inflamação crônica ou disautonomia",
+      "Necessidade de linha do tempo clínica detalhada para identificar o evento gatilho"
+    ]
+  }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+
+let userName = "";
+let currentQ = 0;
+let answers = [];
+let selectedOption = null;
+
+// ─── FUNCTIONS ───────────────────────────────────────────────────────────────
+
+function startQuiz() {
+  userName = document.getElementById("nameInput").value.trim() || "você";
+  showScreen("screen-quiz");
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  el.classList.add("active");
+  // Restart animation
+  el.style.animation = "none";
+  el.offsetHeight;
+  el.style.animation = "";
+  window.scrollTo(0, 0);
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = questions.length + 2; // intro + questions + email = total steps
+  const step = currentQ + 1; // 0 = intro, 1-8 = questions, 9 = email
+  const pct = Math.min((step / total) * 100, 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById("qCounter").textContent = `Pergunta ${currentQ + 1} de ${questions.length}`;
+  document.getElementById("qLabel").textContent = q.label;
+  document.getElementById("qText").textContent = q.text;
+
+  const letters = ["A", "B", "C", "D"];
+  const container = document.getElementById("optionsContainer");
+  container.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", "false");
+    btn.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-text">${opt.text}</div>
+    `;
+    // Pre-select if already answered
+    if (answers[currentQ] === i) {
+      btn.classList.add("selected");
+      btn.setAttribute("aria-checked", "true");
+    }
+    btn.onclick = () => selectOption(i, btn);
+    container.appendChild(btn);
+  });
+
+  // Restore selection state
+  const hasAnswer = answers[currentQ] !== undefined;
+  document.getElementById("btnNext").disabled = !hasAnswer;
+  document.getElementById("btnBack").style.display = currentQ > 0 ? "block" : "none";
+  updateProgress();
+}
+
+function selectOption(index, btn) {
+  document.querySelectorAll(".option").forEach(o => {
+    o.classList.remove("selected");
+    o.setAttribute("aria-checked", "false");
+  });
+  btn.classList.add("selected");
+  btn.setAttribute("aria-checked", "true");
+  answers[currentQ] = index;
+  document.getElementById("btnNext").disabled = false;
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    // Go to email
+    currentQ = questions.length; // mark as past questions for progress
+    document.getElementById("emailName").textContent = userName.split(" ")[0];
+    showScreen("screen-email");
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  const profile = calculateProfile();
+  const p = profiles[profile];
+
+  // Badge
+  const badge = document.getElementById("rBadge");
+  badge.textContent = p.badge;
+  badge.style.background = p.colorHex + "15";
+  badge.style.color = p.colorHex;
+  badge.style.borderColor = p.colorHex + "40";
+
+  // Icon
+  const icon = document.getElementById("rIcon");
+  icon.textContent = p.icon;
+  icon.style.background = p.colorHex + "12";
+  icon.style.borderColor = p.colorHex + "30";
+
+  document.getElementById("rHeading").textContent = p.heading;
+  document.getElementById("rHeading").style.color = p.colorHex;
+  document.getElementById("rTitle").textContent = p.title;
+  document.getElementById("rSubtitle").innerHTML =
+    `<strong style="color:var(--text)">${userName.split(" ")[0]}</strong>, ${p.subtitle}`;
+
+  // Signals
+  const list = document.getElementById("rSignalsList");
+  list.innerHTML = "";
+  p.signals.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "signal-item";
+    div.innerHTML = `<div class="signal-dot" style="background:${p.colorHex}"></div><span>${s}</span>`;
+    list.appendChild(div);
+  });
+
+  showScreen("screen-result");
+  document.getElementById("progressFill").style.width = "100%";
+}
+
+function calculateProfile() {
+  const scores = { A: 0, B: 0, C: 0, D: 0 };
+  answers.forEach((answerIndex, qIndex) => {
+    if (answerIndex !== undefined && questions[qIndex]) {
+      const profile = questions[qIndex].options[answerIndex].profile;
+      scores[profile]++;
+    }
+  });
+  return Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
+}
+
+// ─── KEYBOARD NAV ────────────────────────────────────────────────────────────
+document.addEventListener("keydown", (e) => {
+  const screen = document.querySelector(".screen.active")?.id;
+  if (screen === "screen-quiz") {
+    const keys = { "1": 0, "2": 1, "3": 2, "4": 3 };
+    if (keys[e.key] !== undefined) {
+      const opts = document.querySelectorAll(".option");
+      if (opts[keys[e.key]]) opts[keys[e.key]].click();
+    }
+    if (e.key === "Enter" && !document.getElementById("btnNext").disabled) nextQuestion();
+    if (e.key === "ArrowLeft") prevQuestion();
+  }
+  if (screen === "screen-intro" && e.key === "Enter") startQuiz();
+});
+</script>
+</body>
+</html>
