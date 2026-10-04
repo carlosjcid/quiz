@@ -83,6 +83,18 @@ body{display:flex;flex-direction:column;align-items:center;padding:0;min-height:
 .result-footer-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent-d),#0A1F1E);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
 .result-footer-text{font-size:12px;color:var(--text3);text-align:left;line-height:1.45;}
 .result-footer-text strong{color:var(--text2);}
+.gate-form{width:100%;max-width:360px;display:flex;flex-direction:column;gap:14px;text-align:left;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--text2);}
+.field .name-input{font-size:16px;}
+.field .name-input.invalid{border-color:var(--col-C);}
+.at-wrap{position:relative;}
+.at-wrap .at{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none;}
+.at-wrap .name-input{padding-left:36px;}
+.field-hint{font-size:11px;color:var(--text3);line-height:1.4;}
+.field-error{font-size:12px;color:var(--col-C);min-height:0;line-height:1.4;}
+.field-error:empty{display:none;}
+.gate-lock{width:64px;height:64px;border-radius:20px;background:#3DDDC910;border:1px solid #3DDDC930;display:flex;align-items:center;justify-content:center;margin-bottom:28px;color:var(--accent);}
 @media(max-width:400px){.intro-stats{gap:24px;}}
 </style>
 </head>
@@ -135,6 +147,35 @@ body{display:flex;flex-direction:column;align-items:center;padding:0;min-height:
   </div>
 </div>
 
+<!-- PORTÃO: nome completo + Instagram antes de liberar o resultado -->
+<div class="screen" id="screen-gate">
+  <div class="email-screen">
+    <div class="gate-lock" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+    </div>
+    <h2 class="email-title">Seu resultado está pronto.</h2>
+    <p class="email-sub">Para liberar, me diga quem você é. Assim a equipe já recebe seu perfil quando você chamar no WhatsApp.</p>
+    <div class="gate-form">
+      <div class="field">
+        <label class="field-label" for="gateName">Nome e sobrenome</label>
+        <input class="name-input" type="text" id="gateName" placeholder="Ex.: Maria Silva" autocomplete="name" maxlength="80">
+      </div>
+      <div class="field">
+        <label class="field-label" for="gateInsta">Seu perfil no Instagram</label>
+        <div class="at-wrap">
+          <span class="at" aria-hidden="true">@</span>
+          <input class="name-input" type="text" id="gateInsta" placeholder="seuperfil" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" maxlength="60">
+        </div>
+        <span class="field-hint">Pode colar o link do perfil ou digitar só o @.</span>
+      </div>
+      <div class="field-error" id="gateError" role="alert"></div>
+      <button class="btn-primary" onclick="submitGate()">Liberar meu resultado →</button>
+      <button class="btn-ghost" onclick="backToQuiz()" style="margin-top:4px">← Voltar</button>
+      <p class="disclaimer">Usamos esses dados apenas para o seu atendimento.</p>
+    </div>
+  </div>
+</div>
+
 <!-- CORREÇÃO 1: botão "Quero marcar uma consulta" agora chega com Q-QUIZ -->
 <div class="screen" id="screen-email">
   <div class="email-screen">
@@ -143,7 +184,7 @@ body{display:flex;flex-direction:column;align-items:center;padding:0;min-height:
     <p class="email-sub">Seu resultado está pronto. Onde posso enviar um resumo personalizado da sua investigação?</p>
     <div class="email-form">
       <input class="name-input" type="email" id="emailInput" placeholder="Seu melhor e-mail" autocomplete="email">
-      <button class="btn-primary" onclick="window.open('https://wa.me/5562982940708?text=Oi%21%20Fiz%20o%20quiz%20do%20Dr.%20Kleiner%20e%20quero%20marcar%20uma%20consulta.%20%28Q-QUIZ%29', '_blank')">Quero marcar uma consulta</button>
+      <button class="btn-primary" onclick="openWhatsApp()">Quero marcar uma consulta</button>
       <button class="btn-ghost" onclick="showResult()" style="margin-top:4px">Pular, ver resultado agora</button>
       <p class="disclaimer">Sem spam. Você pode cancelar a qualquer momento.</p>
     </div>
@@ -284,7 +325,50 @@ function selectOption(index,btn){
 function nextQuestion(){
   if(answers[currentQ]===undefined)return;
   if(currentQ<questions.length-1){currentQ++;renderQuestion();}
-  else{currentQ=questions.length;document.getElementById("emailName").textContent=userName.split(" ")[0];showScreen("screen-email");}
+  else{currentQ=questions.length;openGate();}
+}
+
+const WA_NUMBER="5562982940708";
+let lead={fullName:"",insta:""};
+
+function openGate(){
+  const nameEl=document.getElementById("gateName");
+  if(!nameEl.value&&userName&&userName!=="você")nameEl.value=userName;
+  showScreen("screen-gate");
+}
+function backToQuiz(){
+  currentQ=questions.length-1;
+  showScreen("screen-quiz");renderQuestion();
+}
+function normalizeInsta(raw){
+  let v=(raw||"").trim();
+  v=v.replace(/^https?:\/\//i,"").replace(/^(www\.)?instagram\.com\//i,"");
+  v=v.split(/[/?#]/)[0].replace(/^@+/,"").replace(/\s+/g,"");
+  return v;
+}
+function submitGate(){
+  const nameEl=document.getElementById("gateName"),instaEl=document.getElementById("gateInsta"),err=document.getElementById("gateError");
+  const fullName=nameEl.value.trim().replace(/\s+/g," ");
+  const insta=normalizeInsta(instaEl.value);
+  nameEl.classList.remove("invalid");instaEl.classList.remove("invalid");err.textContent="";
+  if(fullName.split(" ").filter(Boolean).length<2){
+    nameEl.classList.add("invalid");err.textContent="Digite seu nome e sobrenome.";nameEl.focus();return;
+  }
+  if(!/^[A-Za-z0-9._]{1,30}$/.test(insta)){
+    instaEl.classList.add("invalid");err.textContent="Digite um perfil de Instagram válido (letras, números, ponto ou sublinhado).";instaEl.focus();return;
+  }
+  lead={fullName,insta};
+  userName=fullName;
+  document.getElementById("emailName").textContent=fullName.split(" ")[0];
+  showScreen("screen-email");
+}
+function buildWaUrl(intro){
+  const p=profiles[calculateProfile()];
+  const msg=intro+"\n\nNome: "+lead.fullName+"\nInstagram: @"+lead.insta+"\nPerfil do quiz: "+p.badge+"\n(Q-QUIZ)";
+  return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg);
+}
+function openWhatsApp(){
+  window.open(buildWaUrl("Oi! Fiz o quiz do Dr. Kleiner e quero marcar uma consulta."),"_blank");
 }
 function prevQuestion(){if(currentQ>0){currentQ--;renderQuestion();}}
 
@@ -307,10 +391,8 @@ function showResult(){
   showScreen("screen-result");
   document.getElementById("progressFill").style.width="100%";
 
-  // CORREÇÃO 3: link dinâmico com perfil real e primeiro nome
-  var primeiroNome=userName.split(" ")[0];
-  var waText=encodeURIComponent("Oi! Fiz o quiz do Dr. Kleiner. Meu perfil é "+p.badge+" e meu nome é "+primeiroNome+". Quero investigar a causa do meu cansaço. (Q-QUIZ)");
-  document.getElementById("rCta").href="https://wa.me/5562982940708?text="+waText;
+  // link dinâmico com nome completo, Instagram e perfil
+  document.getElementById("rCta").href=buildWaUrl("Oi! Fiz o quiz do Dr. Kleiner e quero investigar a causa do meu cansaço.");
 }
 
 function calculateProfile(){
@@ -330,6 +412,7 @@ document.addEventListener("keydown",(e)=>{
     if(e.key==="ArrowLeft")prevQuestion();
   }
   if(screen==="screen-intro"&&e.key==="Enter")startQuiz();
+  if(screen==="screen-gate"&&e.key==="Enter")submitGate();
 });
 </script>
 </body>
